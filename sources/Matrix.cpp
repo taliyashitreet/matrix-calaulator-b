@@ -222,25 +222,25 @@ namespace zich
 
         return *this;
     }
-    Matrix Matrix::operator*=(const Matrix &b)
+    Matrix Matrix::operator*=(const Matrix &a)
     {
-        if (this->col != b.row)
+        if (this->col != a.row)
         {
             throw invalid_argument("this two matrix are not the same size");
         }
-        size_t size = (size_t)this->row * (size_t)b.col;
+        size_t size = (size_t)this->row * (size_t)a.col;
         vector<double> v(size, 0.0);
-        Matrix mul(v, this->row, b.col);
+        Matrix mul(v, this->row, a.col);
 
         for (size_t i = 0; i < this->row; i++)
         {
-            for (size_t j = 0; j < b.col; j++)
+            for (size_t j = 0; j < a.col; j++)
             {
-                for (size_t k = 0; k < b.row; k++)
+                for (size_t k = 0; k < a.row; k++)
                 {
-                    if (this->twoDmat[i][k] * b.twoDmat[k][j] != 0)
+                    if (this->twoDmat[i][k] * a.twoDmat[k][j] != 0)
                     {
-                        mul.twoDmat[i][j] += this->twoDmat[i][k] * b.twoDmat[k][j];
+                        mul.twoDmat[i][j] += this->twoDmat[i][k] * a.twoDmat[k][j];
                     }
                 }
             }
@@ -425,12 +425,21 @@ namespace zich
             allData += c; // enter the  whole information from the user into a string
         }
         allData.pop_back();
+        for ( size_t i = 0; i < allData.length()-3; i++)
+        {
+            if (allData.at(i) == ']') 
+            {
+                if(allData.at(i+1) != ',' || allData.at(i+2) != ' ' || allData.at(i+3) != '[' ){
+                throw invalid_argument("invalid string");
+                }
+            }
+            
+        }
+        if(allData.at(allData.length()-1)!=']'){
+            throw invalid_argument("invalid string");
+        }
         vector<string> Split_to_row = split(allData, ',');
-        cout << Split_to_row[0] << endl;
-        cout << Split_to_row[1] << endl;
-        cout << Split_to_row[2] << endl;
         int row = Split_to_row.size(); // ',' split the string to rows
-        // int len1 = vs.size();
         int col = 0;
         ;
         bool flag = true;
